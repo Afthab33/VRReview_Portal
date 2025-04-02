@@ -1,1104 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VR Game Review</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Press+Start+2P&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary: #3aff3a;
-            --secondary: #ff3a75;
-            --accent: #3a75ff;
-            --dark: #0A0A1E;
-            --light: #ffffff;
-        }
-        
-        body {
-            font-family: 'Chakra Petch', sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            overflow: hidden;
-            background: var(--dark);
-            perspective: 1000px;
-        }
-        
-        /* Main container */
-        .game-environment {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* 3D World - Game Environment */
-        .game-world {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-        }
-        
-        /* Game grid */
-        .game-grid {
-            position: absolute;
-            width: 400%;
-            height: 400%;
-            top: -150%;
-            left: -150%;
-            background-image: 
-                linear-gradient(to right, rgba(58, 255, 58, 0.3) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(58, 255, 58, 0.3) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(500px) rotateX(60deg);
-            transform-origin: center;
-            animation: grid-pulse 4s ease-in-out infinite, grid-move 15s linear infinite;
-            z-index: -2;
-        }
-        
-        @keyframes grid-move {
-            from { transform: perspective(500px) rotateX(60deg) translateY(0); }
-            to { transform: perspective(500px) rotateX(60deg) translateY(50px); }
-        }
-        
-        @keyframes grid-pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 0.5; }
-        }
-        
-        /* VR Headset Animation */
-        .vr-headset {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            perspective: 1000px;
-            z-index: -1;
-        }
-        
-        .headset-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            animation: headset-float 8s ease-in-out infinite;
-        }
-        
-        @keyframes headset-float {
-            0%, 100% { transform: translateY(0) rotateY(0deg); }
-            25% { transform: translateY(-20px) rotateY(5deg); }
-            50% { transform: translateY(0) rotateY(0deg); }
-            75% { transform: translateY(20px) rotateY(-5deg); }
-        }
-        
-        .headset-outline {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 150px;
-            border: 5px solid rgba(58, 255, 58, 0.7);
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(58, 255, 58, 0.5);
-            animation: pulse 3s ease-in-out infinite;
-        }
-        
-        .headset-lenses {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            gap: 20px;
-        }
-        
-        .lens {
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle at center, rgba(58, 255, 58, 0.2), rgba(10, 10, 30, 0.8));
-            border: 3px solid rgba(58, 255, 58, 0.8);
-            border-radius: 50%;
-            animation: lens-glow 4s ease-in-out infinite alternate;
-        }
-        
-        @keyframes lens-glow {
-            0% { box-shadow: 0 0 10px rgba(58, 255, 58, 0.5); }
-            100% { box-shadow: 0 0 30px rgba(58, 255, 58, 0.8); }
-        }
-        
-        /* Game particles */
-        .game-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        
-        .game-particle {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: transparent;
-            border: 2px solid var(--primary);
-            transform-origin: center;
-            animation: particle-spin 10s linear infinite;
-        }
-        
-        .particle-square {
-            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-        }
-        
-        .particle-triangle {
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-            border-color: var(--secondary);
-        }
-        
-        .particle-circle {
-            border-radius: 50%;
-            border-color: var(--accent);
-        }
-        
-        @keyframes particle-spin {
-            0% { 
-                transform: rotate(0deg) translateX(0) translateY(0); 
-                opacity: 0;
-            }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { 
-                transform: rotate(360deg) translateX(var(--tx)) translateY(var(--ty)); 
-                opacity: 0;
-            }
-        }
-        
-        /* Floating 3D objects */
-        .game-objects {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-        }
-        
-        .game-object {
-            position: absolute;
-            transform-style: preserve-3d;
-            animation: object-float 15s ease-in-out infinite;
-        }
-        
-        .cube-wrapper {
-            top: 20%;
-            left: 15%;
-            transform-style: preserve-3d;
-            animation-delay: 0s;
-        }
-        
-        .sphere-wrapper {
-            top: 70%;
-            left: 75%;
-            transform-style: preserve-3d;
-            animation-delay: 3s;
-        }
-        
-        .pyramid-wrapper {
-            top: 60%;
-            left: 25%;
-            transform-style: preserve-3d;
-            animation-delay: 7s;
-        }
-        
-        @keyframes object-float {
-            0%, 100% { 
-                transform: translateY(0) rotateX(0deg) rotateY(0deg); 
-            }
-            25% { 
-                transform: translateY(-50px) rotateX(90deg) rotateY(90deg); 
-            }
-            50% { 
-                transform: translateY(0) rotateX(180deg) rotateY(180deg); 
-            }
-            75% { 
-                transform: translateY(50px) rotateX(270deg) rotateY(270deg); 
-            }
-        }
-        
-        .cube {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            transform-style: preserve-3d;
-            animation: rotate-cube 10s linear infinite;
-        }
-        
-        .cube-face {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            border: 2px solid rgba(58, 255, 58, 0.8);
-            background: rgba(58, 255, 58, 0.1);
-        }
-        
-        .cube-face:nth-child(1) { transform: translateZ(25px); }
-        .cube-face:nth-child(2) { transform: rotateY(180deg) translateZ(25px); }
-        .cube-face:nth-child(3) { transform: rotateY(90deg) translateZ(25px); }
-        .cube-face:nth-child(4) { transform: rotateY(-90deg) translateZ(25px); }
-        .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(25px); }
-        .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(25px); }
-        
-        @keyframes rotate-cube {
-            0% { transform: rotateX(0) rotateY(0); }
-            100% { transform: rotateX(360deg) rotateY(360deg); }
-        }
-        
-        /* Content container */
-        .content-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100vh;
-            z-index: 5;
-        }
-        
-        /* Game UI Box */
-        .game-ui {
-            position: relative;
-            width: 90%;
-            max-width: 700px;
-            background: rgba(10, 10, 30, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            border: 3px solid rgba(58, 255, 58, 0.7);
-            padding: 2.5rem;
-            text-align: center;
-            box-shadow: 
-                0 0 30px rgba(58, 255, 58, 0.3),
-                inset 0 0 20px rgba(58, 255, 58, 0.1);
-            animation: ui-pulse 4s ease-in-out infinite;
-            overflow: hidden;
-        }
-        
-        @keyframes ui-pulse {
-            0%, 100% { 
-                box-shadow: 
-                    0 0 30px rgba(58, 255, 58, 0.3),
-                    inset 0 0 20px rgba(58, 255, 58, 0.1); 
-            }
-            50% { 
-                box-shadow: 
-                    0 0 50px rgba(58, 255, 58, 0.5),
-                    inset 0 0 30px rgba(58, 255, 58, 0.2); 
-            }
-        }
-        
-        /* UI Corners - Game-like effect */
-        .ui-corner {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(58, 255, 58, 0.9);
-        }
-        
-        .corner-top-left {
-            top: 0;
-            left: 0;
-            border-right: none;
-            border-bottom: none;
-        }
-        
-        .corner-top-right {
-            top: 0;
-            right: 0;
-            border-left: none;
-            border-bottom: none;
-        }
-        
-        .corner-bottom-left {
-            bottom: 0;
-            left: 0;
-            border-right: none;
-            border-top: none;
-        }
-        
-        .corner-bottom-right {
-            bottom: 0;
-            right: 0;
-            border-left: none;
-            border-top: none;
-        }
-        
-        /* Game Logo */
-        .game-logo {
-            margin: 0 auto 2rem;
-            position: relative;
-            width: 100px;
-            height: 100px;
-        }
-        
-        .logo-vr {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            animation: logo-rotate 8s linear infinite;
-        }
-        
-        @keyframes logo-rotate {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(360deg); }
-        }
-        
-        .logo-v, .logo-r {
-            position: absolute;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 40px;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(58, 255, 58, 0.8);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        .logo-v {
-            transform: translate(-50%, -50%) translateZ(20px);
-        }
-        
-        .logo-r {
-            transform: translate(-50%, -50%) translateZ(-20px);
-        }
-        
-        /* Headings */
-        h1 {
-            font-family: 'Chakra Petch', sans-serif;
-            font-size: 3.5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #ffffff;
-            letter-spacing: 2px;
-            line-height: 1.4;
-            margin-bottom: 3rem;
-            text-shadow: 
-                0 0 10px rgba(58, 255, 58, 0.8),
-                0 0 20px rgba(58, 255, 58, 0.5);
-        }
-        
-        /* Button */
-        .game-button-container {
-            position: relative;
-            margin-top: 2.5rem;
-        }
-        
-        .game-button {
-            position: relative;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            color: var(--dark);
-            background: var(--primary);
-            border: none;
-            padding: 1.2rem 2.5rem;
-            cursor: pointer;
-            box-shadow: 
-                0 6px 0 rgba(0, 100, 0, 0.8),
-                0 0 20px rgba(58, 255, 58, 0.5);
-            transition: all 0.1s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .game-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                45deg, 
-                transparent 10%, 
-                rgba(255, 255, 255, 0.2) 10%, 
-                rgba(255, 255, 255, 0.2) 20%, 
-                transparent 20%
-            );
-            animation: button-shine 3s linear infinite;
-        }
-        
-        @keyframes button-shine {
-            0% { background-position: 0 0; }
-            100% { background-position: 60px 0; }
-        }
-        
-        .game-button:hover {
-            transform: translateY(3px);
-            box-shadow: 
-                0 3px 0 rgba(0, 100, 0, 0.8),
-                0 0 30px rgba(58, 255, 58, 0.7);
-        }
-        
-        .game-button:active {
-            transform: translateY(6px);
-            box-shadow: 
-                0 0 0 rgba(0, 100, 0, 0.8),
-                0 0 30px rgba(58, 255, 58, 0.9);
-        }
-        
-        /* VR Controller animation */
-        .vr-controller {
-            position: absolute;
-            bottom: -50px;
-            right: -50px;
-            width: 150px;
-            height: 100px;
-            transform: rotate(-30deg);
-            opacity: 0.2;
-        }
-        
-        .controller-body {
-            position: absolute;
-            width: 100%;
-            height: 60%;
-            background: rgba(58, 255, 58, 0.3);
-            border: 2px solid rgba(58, 255, 58, 0.8);
-            border-radius: 50px;
-            top: 0;
-            left: 0;
-        }
-        
-        .controller-button {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 58, 117, 0.8);
-            border-radius: 50%;
-            top: 20px;
-            left: 30px;
-            animation: button-blink 2s infinite;
-        }
-        
-        @keyframes button-blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-                margin-bottom: 2rem;
-            }
-            
-            .game-ui {
-                padding: 1.5rem;
-            }
-            
-            .game-button {
-                font-size: 0.9rem;
-                padding: 1rem 1.5rem;
-            }
-            
-            .game-logo {
-                width: 70px;
-                height: 70px;
-                margin-bottom: 1.5rem;
-            }
-            
-            .logo-v, .logo-r {
-                font-size: 30px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Review Portal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #10b981;
+      --accent-color: #f59e0b;
+      --dark-color: #1f2937;
+      --light-color: #f3f4f6;
+      --card-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+      --card-hover-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+      --text-color: #374151;
+      --border-radius: 1rem;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+    
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
+    }
+    
+    h1 {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+    
+    .subtitle {
+      font-size: 1.3rem;
+      color: #6b7280;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      perspective: 1000px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      width: 100%;
+      max-width: 350px;
+      transition: var(--transition);
+      border: 1px solid rgba(229, 231, 235, 0.5);
+      position: relative;
+      z-index: 1;
+      transform: translateZ(0);
+    }
+    
+    .card:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      box-shadow: var(--card-hover-shadow);
+    }
+    
+    .card:nth-child(1) {
+      border-top: 5px solid var(--primary-color);
+    }
+    
+    .card:nth-child(2) {
+      border-top: 5px solid var(--secondary-color);
+    }
+    
+    .card:nth-child(3) {
+      border-top: 5px solid var(--accent-color);
+    }
+    
+    .card-header {
+      padding: 2rem 1.5rem 1rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .card:nth-child(1) .card-header::before {
+      background-color: rgba(79, 70, 229, 0.1);
+    }
+    
+    .card:nth-child(2) .card-header::before {
+      background-color: rgba(16, 185, 129, 0.1);
+    }
+    
+    .card:nth-child(3) .card-header::before {
+      background-color: rgba(245, 158, 11, 0.1);
+    }
+    
+    .card-title {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .card-body {
+      padding: 1.5rem 2rem 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .card-text {
+      margin-bottom: 2rem;
+      color: #6b7280;
+      font-size: 1.05rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: white;
+      color: var(--dark-color);
+      text-decoration: none;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      transition: var(--transition);
+      border: 2px solid #e5e7eb;
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .card:nth-child(1) .btn:hover {
+      color: white;
+      border-color: var(--primary-color);
+      background-color: var(--primary-color);
+    }
+    
+    .card:nth-child(2) .btn:hover {
+      color: white;
+      border-color: var(--secondary-color);
+      background-color: var(--secondary-color);
+    }
+    
+    .card:nth-child(3) .btn:hover {
+      color: white;
+      border-color: var(--accent-color);
+      background-color: var(--accent-color);
+    }
+    
+    .card-icon {
+      font-size: 4rem;
+      display: block;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: #f9fafb;
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    .card:nth-child(1) .card-icon {
+      box-shadow: 0 0 0 10px rgba(79, 70, 229, 0.1);
+    }
+    
+    .card:nth-child(2) .card-icon {
+      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.1);
+    }
+    
+    .card:nth-child(3) .card-icon {
+      box-shadow: 0 0 0 10px rgba(245, 158, 11, 0.1);
+    }
+    
+    .card:hover .card-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 5rem;
+      color: #6b7280;
+      font-size: 0.95rem;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .cards-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .card {
+        max-width: 100%;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="game-environment">
-        <!-- Game world elements -->
-        <div class="game-world">
-            <div class="game-grid"></div>
-            
-            <!-- VR Headset Animation -->
-            <div class="vr-headset">
-                <div class="headset-container">
-                    <div class="headset-outline"></div>
-                    <div class="headset-lenses">
-                        <div class="lens"></div>
-                        <div class="lens"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Floating 3D Game Objects -->
-            <div class="game-objects">
-                <div class="game-object cube-wrapper">
-                    <div class="cube">
-                        <div class="cube-face"></div>
-                        <div class="cube-face"></div>
-                        <div class="cube-face"></div>
-                        <div class="cube-face"></div>
-                        <div class="cube-face"></div>
-                        <div class="cube-face"></div>
-                    </div>
-                </div>
-                
-                <div class="game-object sphere-wrapper">
-                    <div class="lens" style="width: 60px; height: 60px;"></div>
-                </div>
-                
-                <div class="game-object pyramid-wrapper">
-                    <div class="game-particle particle-triangle" style="width: 60px; height: 60px;"></div>
-                </div>
-            </div>
-            
-            <!-- Game particles -->
-            <div class="game-particles" id="game-particles"></div>
+  <div class="container">
+    <header>
+      <h1>Game Review Portal</h1>
+      <p class="subtitle">Share your gaming experience with us and help fellow students discover amazing games</p>
+    </header>
+    
+    <div class="cards-container">
+      <!-- VR Game Review Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">VR Game Review</h2>
         </div>
-        
-        <!-- Main content -->
-        <div class="content-container">
-            <div class="game-ui animate__animated animate__bounceIn">
-                <!-- UI Corners -->
-                <div class="ui-corner corner-top-left"></div>
-                <div class="ui-corner corner-top-right"></div>
-                <div class="ui-corner corner-bottom-left"></div>
-                <div class="ui-corner corner-bottom-right"></div>
-                
-                <!-- Logo -->
-                <div class="game-logo animate__animated animate__zoomIn">
-                    <div class="logo-vr">
-                        <div class="logo-v">V</div>
-                        <div class="logo-r">R</div>
-                    </div>
-                </div>
-                
-                <!-- Title -->
-                <h1 class="animate__animated animate__fadeIn">VR GAME REVIEW</h1>
-                
-                <!-- Button -->
-                <div class="game-button-container animate__animated animate__fadeInUp">
-                    <a href="https://forms.google.com/YOUR_FORM_ID_HERE" class="game-button" target="_blank">START REVIEW</a>
-                </div>
-                
-                <!-- VR Controller decoration -->
-                <div class="vr-controller">
-                    <div class="controller-body">
-                        <div class="controller-button"></div>
-                    </div>
-                </div>
-            </div>
+        <div class="card-body">
+          <div class="card-icon">🥽</div>
+          <p class="card-text">Share your experiences with virtual reality games. Help other students discover immersive adventures and find the best VR experiences!</p>
+          <a href="https://forms.google.com/vr-game-review" class="btn" target="_blank">Submit Review</a>
         </div>
+      </div>
+      
+      <!-- Arcade Game Review Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Arcade Game Review</h2>
+        </div>
+        <div class="card-body">
+          <div class="card-icon">🎮</div>
+          <p class="card-text">Review your favorite arcade games and classics. Let others know which games are worth the quarters and which ones deliver the best retro experience!</p>
+          <a href="https://forms.google.com/arcade-game-review" class="btn" target="_blank">Submit Review</a>
+        </div>
+      </div>
+      
+      <!-- Other Game Review Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Other Games</h2>
+        </div>
+        <div class="card-body">
+          <div class="card-icon">🎲</div>
+          <p class="card-text">Review mobile games, board games, or any other gaming experience that doesn't fit the other categories. All gaming experiences are valuable!</p>
+          <a href="https://forms.google.com/other-game-review" class="btn" target="_blank">Submit Review</a>
+        </div>
+      </div>
     </div>
-
-    <script>
-        // Generate game particles
-        document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('game-particles');
-            const particleCount = 40;
-            const particleTypes = ['particle-square', 'particle-triangle', 'particle-circle'];
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('game-particle');
-                
-                // Add random particle shape
-                const randomType = particleTypes[Math.floor(Math.random() * particleTypes.length)];
-                particle.classList.add(randomType);
-                
-                // Random size
-                const size = Math.random() * 15 + 5;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                
-                // Random animation delay
-                const delay = Math.random() * 10;
-                particle.style.animationDelay = `${delay}s`;
-                
-                // Random direction
-                const tx = (Math.random() - 0.5) * 500;
-                const ty = (Math.random() - 0.5) * 500;
-                particle.style.setProperty('--tx', `${tx}px`);
-                particle.style.setProperty('--ty', `${ty}px`);
-                
-                particlesContainer.appendChild(particle);
-            }
-        });
-    </script>
-</body>
-</html>
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-            z-index: -1;
-        }
-        
-        .hex {
-            position: absolute;
-            background: none;
-            border: 2px solid rgba(0, 247, 255, 0.2);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        }
-        
-        /* Logo */
-        .vr-logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 2rem;
-            position: relative;
-        }
-        
-        .logo-circles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            animation: logo-rotation 10s linear infinite;
-        }
-        
-        .logo-circle {
-            position: absolute;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .logo-circle-1 {
-            border-color: var(--primary);
-            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
-            animation: pulse 3s ease-in-out infinite;
-        }
-        
-        .logo-circle-2 {
-            border-color: var(--secondary);
-            clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
-            animation: pulse 3s ease-in-out 1.5s infinite;
-        }
-        
-        @keyframes logo-rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        
-        .logo-center {
-            position: absolute;
-            width: 60%;
-            height: 60%;
-            top: 20%;
-            left: 20%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 15px;
-            transform: rotate(45deg);
-            animation: center-pulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes center-pulse {
-            0%, 100% { box-shadow: 0 0 15px var(--primary); }
-            50% { box-shadow: 0 0 30px var(--primary); }
-        }
-        
-        /* Headings */
-        h1 {
-            font-family: 'Audiowide', cursive;
-            font-size: 4.5rem;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 3px;
-            margin-bottom: 3rem;
-            line-height: 1.1;
-            position: relative;
-            text-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
-        }
-        
-        h1::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            filter: blur(15px);
-            opacity: 0.8;
-        }
-        
-        /* Button */
-        .cta-button-container {
-            position: relative;
-            margin-top: 2rem;
-            z-index: 1;
-        }
-        
-        .cta-button {
-            position: relative;
-            font-family: 'Exo', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            color: var(--light);
-            border: none;
-            padding: 1.2rem 3rem;
-            border-radius: 50px;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            animation: button-pulse 3s ease-in-out infinite;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        @keyframes button-pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(112, 0, 255, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(112, 0, 255, 0.8); }
-        }
-        
-        .cta-button::before {
-            content: "";
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            z-index: -1;
-            background: linear-gradient(45deg, 
-                var(--primary), var(--accent), 
-                var(--secondary), var(--primary));
-            background-size: 400%;
-            border-radius: 55px;
-            animation: glowing 20s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        
-        @keyframes glowing {
-            0% { background-position: 0 0; }
-            50% { background-position: 400% 0; }
-            100% { background-position: 0 0; }
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-        
-        .cta-button:hover::before {
-            opacity: 1;
-        }
-        
-        .cta-button:active {
-            transform: translateY(3px) scale(0.95);
-        }
-        
-        .cta-button::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.3), 
-                transparent
-            );
-            transition: 0.5s;
-        }
-        
-        .cta-button:hover::after {
-            left: 100%;
-        }
-        
-        /* VR Headset decorative element */
-        .vr-headset-icon {
-            position: absolute;
-            width: 200px;
-            height: 100px;
-            bottom: -50px;
-            right: -50px;
-            opacity: 0.1;
-            transform: rotate(-20deg);
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3.2rem;
-            }
-            
-            .vr-box {
-                padding: 2rem;
-            }
-            
-            .vr-logo {
-                width: 80px;
-                height: 80px;
-                margin-bottom: 1.5rem;
-            }
-            
-            .cta-button {
-                font-size: 1.2rem;
-                padding: 1rem 2.5rem;
-            }
-        }
-        
-        /* Floating elements */
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .floating-element {
-            position: absolute;
-            opacity: 0.3;
-            filter: blur(1px);
-            animation: float-around 20s ease-in-out infinite;
-        }
-        
-        .element-controller {
-            width: 60px;
-            height: 60px;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-        
-        .element-headset {
-            width: 80px;
-            height: 40px;
-            border: 2px solid var(--secondary);
-            border-radius: 15px;
-            top: 25%;
-            right: 10%;
-            animation-delay: 3s;
-        }
-        
-        .element-cube {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--accent);
-            bottom: 15%;
-            left: 15%;
-            transform: rotate(45deg);
-            animation-delay: 6s;
-        }
-        
-        @keyframes float-around {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            25% {
-                transform: translateY(-50px) rotate(90deg);
-            }
-            50% {
-                transform: translateY(0) rotate(180deg);
-            }
-            75% {
-                transform: translateY(50px) rotate(270deg);
-            }
-        }
-        
-        /* Color variables for JS */
-        :root {
-            --primary-rgb: 0, 247, 255;
-            --secondary-rgb: 255, 0, 230;
-            --accent-rgb: 112, 0, 255;
-        }
-    </style>
-</head>
-<body>
-    <div class="vr-environment">
-        <!-- Background elements -->
-        <div class="vr-world">
-            <div class="cyber-tunnel"></div>
-            <div class="floor-grid"></div>
-            
-            <!-- Hologram effects -->
-            <div class="hologram hologram-1"></div>
-            <div class="hologram hologram-2"></div>
-            <div class="hologram hologram-3"></div>
-            
-            <!-- Particles -->
-            <div class="particles-container" id="particles"></div>
-            
-            <!-- Floating elements -->
-            <div class="floating-elements">
-                <div class="floating-element element-controller"></div>
-                <div class="floating-element element-headset"></div>
-                <div class="floating-element element-cube"></div>
-            </div>
-        </div>
-        
-        <!-- Main content -->
-        <div class="content-container">
-            <div class="vr-box animate__animated animate__fadeIn">
-                <!-- Hexagon decorative border -->
-                <div class="hex-border" id="hex-border"></div>
-                
-                <!-- Logo -->
-                <div class="vr-logo animate__animated animate__zoomIn">
-                    <div class="logo-circles">
-                        <div class="logo-circle logo-circle-1"></div>
-                        <div class="logo-circle logo-circle-2"></div>
-                    </div>
-                    <div class="logo-center"></div>
-                </div>
-                
-                <!-- Title -->
-                <h1 data-text="VR GAME REVIEW" class="animate__animated animate__fadeInDown">VR GAME REVIEW</h1>
-                
-                <!-- Button -->
-                <div class="cta-button-container animate__animated animate__fadeInUp">
-                    <a href="https://forms.google.com/YOUR_FORM_ID_HERE" class="cta-button" target="_blank">SUBMIT YOUR REVIEW</a>
-                </div>
-                
-                <!-- Decorative VR headset icon -->
-                <div class="vr-headset-icon"></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Generate particles
-        document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 100;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size
-                const size = Math.random() * 4 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                
-                // Random color
-                const colors = [
-                    'rgba(0, 247, 255, 0.8)',  // primary
-                    'rgba(255, 0, 230, 0.8)',  // secondary
-                    'rgba(112, 0, 255, 0.8)',  // accent
-                    'rgba(255, 255, 255, 0.8)' // white
-                ];
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.background = randomColor;
-                
-                // Random animation delay
-                const delay = Math.random() * 10;
-                particle.style.animationDelay = `${delay}s`;
-                
-                // Random direction
-                const tx = (Math.random() - 0.5) * 2000;
-                const ty = (Math.random() - 0.5) * 2000;
-                particle.style.setProperty('--tx', `${tx}px`);
-                particle.style.setProperty('--ty', `${ty}px`);
-                
-                particlesContainer.appendChild(particle);
-            }
-            
-            // Generate hexagon border
-            const hexBorder = document.getElementById('hex-border');
-            const hexCount = 15;
-            
-            for (let i = 0; i < hexCount; i++) {
-                const hex = document.createElement('div');
-                hex.classList.add('hex');
-                
-                // Random size and position
-                const size = Math.random() * 150 + 50;
-                hex.style.width = `${size}px`;
-                hex.style.height = `${size}px`;
-                
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                hex.style.left = `${posX}%`;
-                hex.style.top = `${posY}%`;
-                
-                // Random rotation
-                const rotation = Math.random() * 360;
-                hex.style.transform = `rotate(${rotation}deg)`;
-                
-                hexBorder.appendChild(hex);
-            }
-        });
-    </script>
-</body>
-</html>ecap="round" stroke-linejoin="round"/>
-                <path d="M13.6667 15.3333L15.3333 13.6667L17 15.3333L18.6667 13.6667" stroke="#51BBFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M6.33337 8.66667H9.66671" stroke="#51BBFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M6.33337 12H13.6667" stroke="#51BBFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M6.33337 15.3333H11" stroke="#51BBFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <h1 class="animate__animated animate__fadeInDown">VR Game Review</h1>
-        <a href="https://forms.google.com/YOUR_FORM_ID_HERE" class="cta-button animate__animated animate__fadeInUp" target="_blank">SUBMIT YOUR REVIEW</a>
-    </div>
-
-    <script>
-        // Create particles
-        document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size
-                const size = Math.random() * 8 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                
-                // Random animation delay
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                
-                // Random opacity
-                particle.style.opacity = Math.random() * 0.6 + 0.2;
-                
-                particlesContainer.appendChild(particle);
-            }
-        });
-    </script>
+    
+    <footer>
+      <p>&copy; 2025 Game Review Portal | Created for students, by students | All rights reserved</p>
+    </footer>
+  </div>
 </body>
 </html>

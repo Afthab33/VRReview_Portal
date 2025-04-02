@@ -33,12 +33,12 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 3rem 2rem;
+      padding: 2rem;
     }
     
     header {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 3rem;
       position: relative;
     }
     
@@ -59,14 +59,14 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
       letter-spacing: -0.025em;
     }
     
     .subtitle {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       color: #6b7280;
       max-width: 600px;
       margin: 0 auto;
@@ -76,7 +76,7 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 2.5rem;
+      gap: 2rem;
       perspective: 1000px;
     }
     
@@ -87,11 +87,14 @@
       overflow: hidden;
       width: 100%;
       max-width: 350px;
+      height: 400px;
       transition: var(--transition);
       border: 1px solid rgba(229, 231, 235, 0.5);
       position: relative;
       z-index: 1;
       transform: translateZ(0);
+      display: flex;
+      flex-direction: column;
     }
     
     .card:hover {
@@ -112,41 +115,32 @@
     }
     
     .card-header {
-      padding: 2rem 1.5rem 1rem;
+      padding: 1.5rem 1.5rem 0.5rem;
       text-align: center;
       position: relative;
       z-index: 1;
     }
     
-    .card:nth-child(1) .card-header::before {
-      background-color: rgba(79, 70, 229, 0.1);
-    }
-    
-    .card:nth-child(2) .card-header::before {
-      background-color: rgba(16, 185, 129, 0.1);
-    }
-    
-    .card:nth-child(3) .card-header::before {
-      background-color: rgba(245, 158, 11, 0.1);
-    }
-    
     .card-title {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 600;
       color: var(--dark-color);
     }
     
     .card-body {
-      padding: 1.5rem 2rem 2.5rem;
+      padding: 1rem 1.5rem 1.5rem;
       position: relative;
       z-index: 1;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
     
     .card-text {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       color: #6b7280;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
     }
     
     .btn {
@@ -167,178 +161,189 @@
       position: relative;
       overflow: hidden;
       z-index: 1;
-      margin: 0 auto 0.75rem auto;
+      margin: auto auto 0 auto;
       display: block;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     
-    .card:nth-child(1) .btn:hover {
-      color: white;
-      border-color: var(--primary-color);
+    .card:nth-child(1) .btn {
+      color: #fff;
       background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .card:nth-child(2) .btn {
+      color: #fff;
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .card:nth-child(3) .btn {
+      color: #fff;
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+    
+    .card:nth-child(1) .btn:hover {
+      background-color: #4338ca;
+      border-color: #4338ca;
     }
     
     .card:nth-child(2) .btn:hover {
-      color: white;
-      border-color: var(--secondary-color);
-      background-color: var(--secondary-color);
+      background-color: #059669;
+      border-color: #059669;
     }
     
     .card:nth-child(3) .btn:hover {
-      color: white;
-      border-color: var(--accent-color);
-      background-color: var(--accent-color);
+      background-color: #d97706;
+      border-color: #d97706;
     }
     
     .card-icon {
-      font-size: 4rem;
+      font-size: 3rem;
       display: block;
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       background: #f9fafb;
-      width: 100px;
-      height: 100px;
-      line-height: 100px;
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
       border-radius: 50%;
-      margin: 0 auto 2rem;
+      margin: 0 auto 1.5rem;
       transition: var(--transition);
       position: relative;
     }
     
     .card:nth-child(1) .card-icon {
-      box-shadow: 0 0 0 10px rgba(79, 70, 229, 0.1);
+      box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.1);
     }
     
     .card:nth-child(2) .card-icon {
-      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.1);
+      box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.1);
     }
     
     .card:nth-child(3) .card-icon {
-      box-shadow: 0 0 0 10px rgba(245, 158, 11, 0.1);
+      box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.1);
     }
     
     .card:hover .card-icon {
       transform: scale(1.1) rotate(5deg);
     }
     
-    .demo-container {
-      margin: 1.5rem 0;
-      padding: 1.25rem;
-      background-color: rgba(245, 158, 11, 0.05);
-      border-radius: 0.75rem;
-      border: 1px dashed rgba(245, 158, 11, 0.3);
-      transition: var(--transition);
+    /* Dropdown styles for Figma card */
+    .dropdown {
+      position: relative;
+      margin-top: auto;
+      margin-bottom: 1rem;
     }
     
-    .card:hover .demo-container {
-      background-color: rgba(245, 158, 11, 0.08);
-      border-color: rgba(245, 158, 11, 0.4);
+    .dropdown-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
-    .demo-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--accent-color);
-      margin: 0 0 0.75rem 0;
-      text-align: center;
+    .dropdown-btn:hover {
+      background-color: #d97706;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      right: 0;
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      z-index: 10;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .dropdown-item {
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--dark-color);
+      border-radius: 0.375rem;
+      transition: background-color 0.2s;
+      margin-bottom: 0.5rem;
+    }
+    
+    .dropdown-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .dropdown-item:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .dropdown-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
+      background-color: rgba(245, 158, 11, 0.1);
+      border-radius: 50%;
+      font-size: 0.9rem;
+    }
+    
+    .dropdown-label {
+      display: flex;
+      align-items: center;
       gap: 0.5rem;
     }
     
-    .demo-title::before {
-      content: '2';
+    .step-circle {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
       background-color: var(--accent-color);
       color: white;
       border-radius: 50%;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 600;
-    }
-    
-    .demo-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    
-    .demo-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      background-color: white;
-      text-decoration: none;
-      color: var(--dark-color);
-      font-size: 0.95rem;
-      transition: var(--transition);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    }
-    
-    .demo-link:hover {
-      background-color: rgba(245, 158, 11, 0.1);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }
-    
-    .demo-link-icon {
-      font-size: 1.4rem;
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: rgba(245, 158, 11, 0.1);
     }
     
-    .step-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      background-color: var(--accent-color);
-      color: white;
-      border-radius: 50%;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-right: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    .dropdown:hover .dropdown-content {
+      display: block;
     }
     
-    .card:nth-child(3) .btn:nth-of-type(1) {
-      color: #fff;
-      background-color: var(--accent-color);
-      border-color: var(--accent-color);
+    .dropdown-arrow {
+      transition: transform 0.3s;
     }
     
-    .card:nth-child(3) .btn:nth-of-type(2) {
-      color: #fff;
-      background-color: var(--accent-color);
-      border-color: var(--accent-color);
-    }
-    
-    .card:nth-child(3) .btn:hover {
-      background-color: #e67e00;
-      border-color: #e67e00;
+    .dropdown:hover .dropdown-arrow {
+      transform: rotate(180deg);
     }
     
     footer {
       text-align: center;
-      margin-top: 5rem;
+      margin-top: 3rem;
       color: #6b7280;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       border-top: 1px solid #e5e7eb;
-      padding-top: 2rem;
+      padding-top: 1.5rem;
     }
     
     @media (max-width: 768px) {
@@ -349,6 +354,7 @@
       
       .card {
         max-width: 100%;
+        height: auto;
       }
       
       h1 {
@@ -356,24 +362,11 @@
       }
       
       .subtitle {
-        font-size: 1.1rem;
-      }
-      
-      .demo-links {
-        gap: 0.5rem;
-      }
-      
-      .demo-link {
-        padding: 0.6rem;
-      }
-      
-      .demo-link-icon {
-        width: 32px;
-        height: 32px;
+        font-size: 1rem;
       }
       
       .card-body {
-        padding: 1.25rem 1.5rem 2rem;
+        padding: 1rem 1.25rem 1.5rem;
       }
     }
     
@@ -383,27 +376,19 @@
       }
       
       .container {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
       }
       
       .card-icon {
-        width: 80px;
-        height: 80px;
-        line-height: 80px;
-        font-size: 3rem;
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        font-size: 2.5rem;
       }
       
       .btn {
         width: 100%;
         max-width: none;
-      }
-      
-      .demo-container {
-        padding: 1rem;
-      }
-      
-      .demo-link {
-        font-size: 0.85rem;
       }
     }
   </style>
@@ -423,7 +408,7 @@
         </div>
         <div class="card-body">
           <div class="card-icon">🥽</div>
-          <p class="card-text">Share your experience with virtual reality game.</p>
+          <p class="card-text">Share your experience with virtual reality games and help others discover immersive experiences.</p>
           <a href="https://forms.google.com/vr-game-review" class="btn" target="_blank">Submit Review</a>
         </div>
       </div>
@@ -435,7 +420,7 @@
         </div>
         <div class="card-body">
           <div class="card-icon">🎮</div>
-          <p class="card-text">Share your experience with Game Arcade.</p>
+          <p class="card-text">Share your experience with Game Arcade and help improve game accessibility features.</p>
           <a href="https://forms.gle/u1h6xqrKoyNqWgub7" class="btn" target="_blank">Submit Review</a>
         </div>
       </div>
@@ -447,33 +432,57 @@
         </div>
         <div class="card-body">
           <div class="card-icon">👨‍💻</div>
-          <p class="card-text">Share your experience with our Figma Plugin. Follow the 3 steps below to complete the process.</p>
+          <p class="card-text">Share your experience with our Figma Plugin using the options below.</p>
           
-          <!-- Added step number for the sequence -->
-          <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="btn" target="_blank">
-            <span class="step-number">1</span>Pre-Survey
-          </a>
-          
-          <div class="demo-container">
-            <p class="demo-title">Plugin Demo</p>
-            <div class="demo-links">
-              <a href="https://drive.google.com/file/d/1eJxhO9h_REqq5_C2Wz55K_GsfoybyyVu/view" class="demo-link" target="_blank">
-                <span class="demo-link-icon">📥</span>
+          <div class="dropdown">
+            <button class="dropdown-btn">
+              Choose an option
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+              <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="dropdown-item" target="_blank">
+                <div class="dropdown-icon">1</div>
+                <span>Pre-Survey</span>
+              </a>
+              <a href="https://drive.google.com/file/d/1eJxhO9h_REqq5_C2Wz55K_GsfoybyyVu/view" class="dropdown-item" target="_blank">
+                <div class="dropdown-icon">📥</div>
                 <span>Download Plugin</span>
               </a>
-              <a href="https://www.youtube.com/watch?v=HbtbepYbAgE" class="demo-link" target="_blank">
-                <span class="demo-link-icon">▶️</span>
+              <a href="https://www.youtube.com/watch?v=HbtbepYbAgE" class="dropdown-item" target="_blank">
+                <div class="dropdown-icon">▶️</div>
                 <span>Tutorial Video</span>
+              </a>
+              <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="dropdown-item" target="_blank">
+                <div class="dropdown-icon">3</div>
+                <span>Post-Survey</span>
               </a>
             </div>
           </div>
-          
-          <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="btn" target="_blank">
-            <span class="step-number">3</span>Post-Survey
-          </a>
         </div>
       </div>
     </div>
+    
+    <footer>
+      <p>&copy; 2025 Review Portal | All rights reserved</p>
+    </footer>
   </div>
+  
+  <script>
+    // Add click event for mobile compatibility
+    const dropdownBtn = document.querySelector('.dropdown-btn');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    
+    dropdownBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.dropdown')) {
+        dropdownContent.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>

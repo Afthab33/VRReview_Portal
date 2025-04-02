@@ -95,6 +95,8 @@
       transform: translateZ(0);
       display: flex;
       flex-direction: column;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     
     .card:hover {
@@ -230,69 +232,150 @@
       transform: scale(1.1) rotate(5deg);
     }
     
-    /* Steps styles for Figma card */
-    .steps-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    /* Steps container and toggle button */
+    .steps-wrapper {
       margin-top: auto;
       margin-bottom: 1rem;
+      width: 100%;
+    }
+    
+    .steps-container {
+      display: none;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+      width: 100%;
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+      max-height: 0;
+    }
+    
+    .steps-container.active {
+      display: flex;
+      max-height: 1000px;
+    }
+    
+    .steps-toggle-btn {
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(245, 158, 11, 0.25);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .steps-toggle-btn:hover {
+      background-color: #e67e00;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(245, 158, 11, 0.3);
+    }
+    
+    .steps-toggle-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+    }
+    
+    .steps-toggle-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+      z-index: -1;
+    }
+    
+    .steps-toggle-btn:hover::before {
+      left: 100%;
+    }
+    
+    .steps-toggle-icon {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .steps-toggle-btn.active .steps-toggle-icon {
+      transform: rotate(180deg);
     }
     
     .step-item {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
       text-decoration: none;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
+      padding: 0.85rem 1rem;
+      border-radius: 0.75rem;
       transition: var(--transition);
       background-color: white;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
       position: relative;
       overflow: hidden;
     }
     
-    .step-item::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 4px;
-      background-color: var(--accent-color);
+    .step-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-color);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+      background-color: rgba(245, 158, 11, 0.03);
     }
     
-    .step-item:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    .step-item.disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    
+    .step-number-container {
+      position: relative;
+      margin-right: 0.85rem;
     }
     
     .step-number {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       background-color: var(--accent-color);
       color: white;
       border-radius: 50%;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+      z-index: 1;
     }
     
     .step-icon {
+      position: absolute;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      background-color: rgba(245, 158, 11, 0.1);
+      width: 18px;
+      height: 18px;
+      background-color: white;
       border-radius: 50%;
-      font-size: 0.9rem;
+      font-size: 0.75rem;
       flex-shrink: 0;
+      top: -3px;
+      right: -3px;
+      border: 2px solid white;
+      z-index: 2;
+      color: var(--accent-color);
     }
     
     .step-content {
@@ -301,39 +384,83 @@
     
     .step-title {
       color: var(--dark-color);
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.95rem;
       margin: 0;
+      display: flex;
+      align-items: center;
     }
     
     .step-desc {
       color: #6b7280;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       margin: 0.25rem 0 0;
+      line-height: 1.4;
+    }
+    
+    .step-progress {
+      position: absolute;
+      left: 15px;
+      top: 48px;
+      width: 2px;
+      height: calc(100% - 32px);
+      background-color: rgba(245, 158, 11, 0.2);
+      z-index: 0;
     }
     
     .steps-header {
       font-size: 1.1rem;
       font-weight: 600;
       color: var(--dark-color);
-      margin: 1.5rem 0 0.75rem;
+      margin: 1.25rem 0 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(245, 158, 11, 0.15);
     }
     
-    .steps-header::before {
-      content: "";
-      display: block;
-      width: 30px;
-      height: 3px;
-      background-color: var(--accent-color);
-      border-radius: 2px;
+    .step-status {
+      margin-left: auto;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      border-radius: 1rem;
+      background-color: rgba(245, 158, 11, 0.1);
+      color: var(--accent-color);
     }
     
     /* Adjustments for the third card */
     .card:nth-child(3) {
-      height: 520px;
+      height: 540px;
+    }
+    
+    /* Sub-steps styling */
+    .sub-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    
+    .sub-step-link {
+      text-decoration: none;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.45rem 0.75rem;
+      background-color: rgba(245, 158, 11, 0.1);
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    
+    .sub-step-link:hover {
+      background-color: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.3);
+      transform: translateY(-2px);
     }
     
     footer {
@@ -433,39 +560,56 @@
           <div class="card-icon">👨‍💻</div>
           <p class="card-text">Share your experience with our Figma Plugin by following these steps:</p>
           
-          <h3 class="steps-header">Follow These Steps</h3>
-          <div class="steps-container">
-            <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="step-item" target="_blank">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h4 class="step-title">Pre-Survey</h4>
-                <p class="step-desc">Complete before using the plugin</p>
-              </div>
-            </a>
+          <div class="steps-wrapper">
+            <button class="steps-toggle-btn" id="stepsToggleBtn">
+              Start Process <span class="steps-toggle-icon">▼</span>
+            </button>
             
-            <a href="https://drive.google.com/file/d/1eJxhO9h_REqq5_C2Wz55K_GsfoybyyVu/view" class="step-item" target="_blank">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4 class="step-title">Download Plugin</h4>
-                <p class="step-desc">Get the latest version</p>
+            <div class="steps-container" id="stepsContainer">
+              <h3 class="steps-header">Follow These Steps</h3>
+              
+              <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="step-item" target="_blank">
+                <div class="step-number-container">
+                  <div class="step-number">1</div>
+                  <div class="step-icon">📋</div>
+                  <div class="step-progress"></div>
+                </div>
+                <div class="step-content">
+                  <h4 class="step-title">Pre-Survey <span class="step-status">Required</span></h4>
+                  <p class="step-desc">Complete the initial survey before using the plugin</p>
+                </div>
+              </a>
+              
+              <div class="step-item">
+                <div class="step-number-container">
+                  <div class="step-number">2</div>
+                  <div class="step-progress"></div>
+                </div>
+                <div class="step-content">
+                  <h4 class="step-title">Install & Learn</h4>
+                  <p class="step-desc">Get the plugin and learn how to use it</p>
+                  <div class="sub-steps">
+                    <a href="https://drive.google.com/file/d/1eJxhO9h_REqq5_C2Wz55K_GsfoybyyVu/view" target="_blank" class="sub-step-link">
+                      <span>📥</span> Download Plugin
+                    </a>
+                    <a href="https://www.youtube.com/watch?v=HbtbepYbAgE" target="_blank" class="sub-step-link">
+                      <span>▶️</span> Watch Tutorial
+                    </a>
+                  </div>
+                </div>
               </div>
-            </a>
-            
-            <a href="https://www.youtube.com/watch?v=HbtbepYbAgE" class="step-item" target="_blank">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4 class="step-title">Tutorial Video</h4>
-                <p class="step-desc">Learn how to use the plugin</p>
-              </div>
-            </a>
-            
-            <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="step-item" target="_blank">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4 class="step-title">Post-Survey</h4>
-                <p class="step-desc">Share your feedback after use</p>
-              </div>
-            </a>
+              
+              <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="step-item" target="_blank">
+                <div class="step-number-container">
+                  <div class="step-number">3</div>
+                  <div class="step-icon">✓</div>
+                </div>
+                <div class="step-content">
+                  <h4 class="step-title">Post-Survey <span class="step-status">Required</span></h4>
+                  <p class="step-desc">Share your experience and feedback after using the plugin</p>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>

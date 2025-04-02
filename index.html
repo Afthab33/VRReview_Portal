@@ -87,7 +87,7 @@
       overflow: hidden;
       width: 100%;
       max-width: 350px;
-      height: 400px;
+      height: 480px;
       transition: var(--transition);
       border: 1px solid rgba(229, 231, 235, 0.5);
       position: relative;
@@ -230,111 +230,110 @@
       transform: scale(1.1) rotate(5deg);
     }
     
-    /* Dropdown styles for Figma card */
-    .dropdown {
-      position: relative;
+    /* Steps styles for Figma card */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
       margin-top: auto;
       margin-bottom: 1rem;
     }
     
-    .dropdown-btn {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 0.5rem;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .dropdown-btn:hover {
-      background-color: #d97706;
-    }
-    
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      bottom: 100%;
-      left: 0;
-      right: 0;
-      background-color: white;
-      border-radius: 0.5rem;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-      z-index: 10;
-      padding: 0.75rem;
-      margin-bottom: 0.5rem;
-      border: 1px solid #e5e7eb;
-    }
-    
-    .dropdown-item {
-      padding: 0.75rem;
+    .step-item {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       text-decoration: none;
-      color: var(--dark-color);
-      border-radius: 0.375rem;
-      transition: background-color 0.2s;
-      margin-bottom: 0.5rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      transition: var(--transition);
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
     }
     
-    .dropdown-item:last-child {
-      margin-bottom: 0;
+    .step-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background-color: var(--accent-color);
     }
     
-    .dropdown-item:hover {
-      background-color: #f3f4f6;
+    .step-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     
-    .dropdown-icon {
-      flex-shrink: 0;
-      width: 24px;
-      height: 24px;
+    .step-number {
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 28px;
+      height: 28px;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    
+    .step-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
       background-color: rgba(245, 158, 11, 0.1);
       border-radius: 50%;
       font-size: 0.9rem;
+      flex-shrink: 0;
     }
     
-    .dropdown-label {
+    .step-content {
+      flex-grow: 1;
+    }
+    
+    .step-title {
+      color: var(--dark-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    
+    .step-desc {
+      color: #6b7280;
+      font-size: 0.8rem;
+      margin: 0.25rem 0 0;
+    }
+    
+    .steps-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--dark-color);
+      margin: 1.5rem 0 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
     
-    .step-circle {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      background-color: var(--accent-color);
-      color: white;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-    
-    .dropdown:hover .dropdown-content {
+    .steps-header::before {
+      content: "";
       display: block;
+      width: 30px;
+      height: 3px;
+      background-color: var(--accent-color);
+      border-radius: 2px;
     }
     
-    .dropdown-arrow {
-      transition: transform 0.3s;
-    }
-    
-    .dropdown:hover .dropdown-arrow {
-      transform: rotate(180deg);
+    /* Adjustments for the third card */
+    .card:nth-child(3) {
+      height: 520px;
     }
     
     footer {
@@ -425,64 +424,52 @@
         </div>
       </div>
       
-      <!-- Figma Plugin Card -->
+      <!-- Figma Plugin Card - Improved with Steps -->
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">Figma Plugin</h2>
         </div>
         <div class="card-body">
           <div class="card-icon">👨‍💻</div>
-          <p class="card-text">Share your experience with our Figma Plugin using the options below.</p>
+          <p class="card-text">Share your experience with our Figma Plugin by following these steps:</p>
           
-          <div class="dropdown">
-            <button class="dropdown-btn">
-              Choose an option
-              <span class="dropdown-arrow">▼</span>
-            </button>
-            <div class="dropdown-content">
-              <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="dropdown-item" target="_blank">
-                <div class="dropdown-icon">1</div>
-                <span>Pre-Survey</span>
-              </a>
-              <a href="https://drive.google.com/file/d/1eJxhO9h_REqq5_C2Wz55K_GsfoybyyVu/view" class="dropdown-item" target="_blank">
-                <div class="dropdown-icon">📥</div>
-                <span>Download Plugin</span>
-              </a>
-              <a href="https://www.youtube.com/watch?v=HbtbepYbAgE" class="dropdown-item" target="_blank">
-                <div class="dropdown-icon">▶️</div>
-                <span>Tutorial Video</span>
-              </a>
-              <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="dropdown-item" target="_blank">
-                <div class="dropdown-icon">3</div>
-                <span>Post-Survey</span>
-              </a>
-            </div>
+          <h3 class="steps-header">Follow These Steps</h3>
+          <div class="steps-container">
+            <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="step-item" target="_blank">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4 class="step-title">Pre-Survey</h4>
+                <p class="step-desc">Complete before using the plugin</p>
+              </div>
+            </a>
+            
+            <a href="https://drive.google.com/file/d/1eJxhO9h_REqq5_C2Wz55K_GsfoybyyVu/view" class="step-item" target="_blank">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4 class="step-title">Download Plugin</h4>
+                <p class="step-desc">Get the latest version</p>
+              </div>
+            </a>
+            
+            <a href="https://www.youtube.com/watch?v=HbtbepYbAgE" class="step-item" target="_blank">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4 class="step-title">Tutorial Video</h4>
+                <p class="step-desc">Learn how to use the plugin</p>
+              </div>
+            </a>
+            
+            <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="step-item" target="_blank">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4 class="step-title">Post-Survey</h4>
+                <p class="step-desc">Share your feedback after use</p>
+              </div>
+            </a>
           </div>
         </div>
       </div>
     </div>
-    
-    <footer>
-      <p>&copy; 2025 Review Portal | All rights reserved</p>
-    </footer>
   </div>
-  
-  <script>
-    // Add click event for mobile compatibility
-    const dropdownBtn = document.querySelector('.dropdown-btn');
-    const dropdownContent = document.querySelector('.dropdown-content');
-    
-    dropdownBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-    });
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.dropdown')) {
-        dropdownContent.style.display = 'none';
-      }
-    });
-  </script>
 </body>
 </html>

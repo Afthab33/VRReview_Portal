@@ -167,7 +167,7 @@
       position: relative;
       overflow: hidden;
       z-index: 1;
-      margin: 0 auto;
+      margin: 0 auto 0.75rem auto;
       display: block;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
@@ -221,6 +221,117 @@
       transform: scale(1.1) rotate(5deg);
     }
     
+    .demo-container {
+      margin: 1.5rem 0;
+      padding: 1.25rem;
+      background-color: rgba(245, 158, 11, 0.05);
+      border-radius: 0.75rem;
+      border: 1px dashed rgba(245, 158, 11, 0.3);
+      transition: var(--transition);
+    }
+    
+    .card:hover .demo-container {
+      background-color: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+    
+    .demo-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      margin: 0 0 0.75rem 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .demo-title::before {
+      content: '2';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .demo-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .demo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      background-color: white;
+      text-decoration: none;
+      color: var(--dark-color);
+      font-size: 0.95rem;
+      transition: var(--transition);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    
+    .demo-link:hover {
+      background-color: rgba(245, 158, 11, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .demo-link-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba(245, 158, 11, 0.1);
+    }
+    
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    .card:nth-child(3) .btn:nth-of-type(1) {
+      color: #fff;
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+    
+    .card:nth-child(3) .btn:nth-of-type(2) {
+      color: #fff;
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+    
+    .card:nth-child(3) .btn:hover {
+      background-color: #e67e00;
+      border-color: #e67e00;
+    }
+    
     footer {
       text-align: center;
       margin-top: 5rem;
@@ -246,6 +357,53 @@
       
       .subtitle {
         font-size: 1.1rem;
+      }
+      
+      .demo-links {
+        gap: 0.5rem;
+      }
+      
+      .demo-link {
+        padding: 0.6rem;
+      }
+      
+      .demo-link-icon {
+        width: 32px;
+        height: 32px;
+      }
+      
+      .card-body {
+        padding: 1.25rem 1.5rem 2rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .container {
+        padding: 2rem 1rem;
+      }
+      
+      .card-icon {
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        font-size: 3rem;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: none;
+      }
+      
+      .demo-container {
+        padding: 1rem;
+      }
+      
+      .demo-link {
+        font-size: 0.85rem;
       }
     }
   </style>
@@ -282,15 +440,37 @@
         </div>
       </div>
       
-      <!-- Other Game Review Card -->
+      <!-- Figma Plugin Card -->
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">Figma Plugin</h2>
         </div>
         <div class="card-body">
           <div class="card-icon">👨‍💻</div>
-          <p class="card-text">Share your experience with Figma Plugin.</p>
-          <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="btn" target="_blank">Submit Review</a>
+          <p class="card-text">Share your experience with our Figma Plugin. Follow the 3 steps below to complete the process.</p>
+          
+          <!-- Added step number for the sequence -->
+          <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="btn" target="_blank">
+            <span class="step-number">1</span>Pre-Survey
+          </a>
+          
+          <div class="demo-container">
+            <p class="demo-title">Plugin Demo</p>
+            <div class="demo-links">
+              <a href="https://drive.google.com/file/d/1eJxhO9h_REqq5_C2Wz55K_GsfoybyyVu/view" class="demo-link" target="_blank">
+                <span class="demo-link-icon">📥</span>
+                <span>Download Plugin</span>
+              </a>
+              <a href="https://www.youtube.com/watch?v=HbtbepYbAgE" class="demo-link" target="_blank">
+                <span class="demo-link-icon">▶️</span>
+                <span>Tutorial Video</span>
+              </a>
+            </div>
+          </div>
+          
+          <a href="https://forms.gle/SgkBYyk2C1zds5JdA" class="btn" target="_blank">
+            <span class="step-number">3</span>Post-Survey
+          </a>
         </div>
       </div>
     </div>

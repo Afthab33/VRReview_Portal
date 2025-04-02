@@ -49,31 +49,42 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
-    // Add hover effect to Figma steps
+    // Add minimal animation to figma steps
     const figmaSteps = document.querySelectorAll('.figma-step');
     
-    figmaSteps.forEach(step => {
-      // Add subtle scaling effect on hover
+    figmaSteps.forEach((step, index) => {
+      // Add simple fade in
+      step.style.opacity = '0';
+      setTimeout(() => {
+        step.style.opacity = '1';
+      }, 100 + index * 50);
+      
+      // Simple hover effect
       step.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-3px)';
-        this.style.boxShadow = '0 4px 10px rgba(245, 158, 11, 0.15)';
+        this.style.transform = 'translateY(-2px)';
       });
       
       step.addEventListener('mouseleave', function() {
         this.style.transform = '';
-        this.style.boxShadow = '';
       });
     });
+
+    // Ensure all cards are same height
+    function equalizeCardHeights() {
+      if (window.innerWidth < 768) {
+        // On mobile, let cards have natural height
+        document.querySelectorAll('.card').forEach(card => {
+          card.style.height = 'auto';
+        });
+      } else {
+        // On desktop, use fixed height
+        document.querySelectorAll('.card').forEach(card => {
+          card.style.height = '480px';
+        });
+      }
+    }
     
-    // Add slight delay for staggered animation
-    figmaSteps.forEach((step, index) => {
-      step.style.opacity = '0';
-      step.style.transform = 'translateY(10px)';
-      step.style.transition = `all 0.3s ease ${index * 0.1}s`;
-      
-      setTimeout(() => {
-        step.style.opacity = '1';
-        step.style.transform = 'translateY(0)';
-      }, 100);
-    });
-  });
+    // Run on page load and resize
+    equalizeCardHeights();
+    window.addEventListener('resize', equalizeCardHeights);
+});

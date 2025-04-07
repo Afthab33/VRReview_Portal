@@ -3,7 +3,6 @@
 :root {
   --primary-color: #4f46e5;
   --secondary-color: #10b981;
-  --accent-color: #f59e0b;
   --dark-color: #1f2937;
   --light-color: #f3f4f6;
   --card-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
@@ -34,12 +33,16 @@ body {
   margin: 0 auto;
   padding: 2rem 1rem;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 header {
   text-align: center;
   margin-bottom: 3rem;
   position: relative;
+  width: 100%;
 }
 
 header::after {
@@ -75,8 +78,7 @@ h1 {
 .cards-container {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
+  width: 100%;
   perspective: 1000px;
 }
 
@@ -93,24 +95,13 @@ h1 {
   border: 1px solid rgba(229, 231, 235, 0.5);
   position: relative;
   z-index: 1;
-  height: 480px; /* Fixed height for all cards */
+  height: 480px; /* Fixed height for desktop */
+  border-top: 5px solid var(--primary-color);
 }
 
 .card:hover {
   transform: translateY(-5px);
   box-shadow: var(--card-hover-shadow);
-}
-
-.card:nth-child(1) {
-  border-top: 5px solid var(--primary-color);
-}
-
-.card:nth-child(2) {
-  border-top: 5px solid var(--secondary-color);
-}
-
-.card:nth-child(3) {
-  border-top: 5px solid var(--accent-color);
 }
 
 .card-header {
@@ -141,14 +132,14 @@ h1 {
 
 .btn {
   display: inline-block;
-  background-color: white;
-  color: var(--dark-color);
+  background-color: var(--primary-color);
+  color: #fff;
   text-decoration: none;
   padding: 0.75rem 1.25rem;
   border-radius: 0.5rem;
   font-weight: 500;
   transition: var(--transition);
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--primary-color);
   cursor: pointer;
   font-size: 0.95rem;
   text-align: center;
@@ -156,37 +147,10 @@ h1 {
   align-self: center;
 }
 
-.card:nth-child(1) .btn {
-  color: #fff;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-.card:nth-child(2) .btn {
-  color: #fff;
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-}
-
-.card:nth-child(3) .btn {
-  color: #fff;
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-}
-
-.card:nth-child(1) .btn:hover {
+.btn:hover {
   background-color: #4338ca;
   border-color: #4338ca;
-}
-
-.card:nth-child(2) .btn:hover {
-  background-color: #059669;
-  border-color: #059669;
-}
-
-.card:nth-child(3) .btn:hover {
-  background-color: #d97706;
-  border-color: #d97706;
+  transform: translateY(-2px);
 }
 
 .card-icon {
@@ -200,111 +164,14 @@ h1 {
   line-height: 80px;
   border-radius: 50%;
   transition: var(--transition);
-}
-
-.card:nth-child(1) .card-icon {
   box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.1);
-}
-
-.card:nth-child(2) .card-icon {
-  box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.1);
-}
-
-.card:nth-child(3) .card-icon {
-  box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.1);
 }
 
 .card:hover .card-icon {
   transform: scale(1.05);
 }
 
-/* Simplified and more compact Figma Steps */
-.figma-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  margin-top: auto;
-}
-
-.figma-step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #f9fafb;
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  text-decoration: none;
-  color: var(--dark-color);
-  transition: all 0.2s ease;
-}
-
-.figma-step:hover {
-  background-color: rgba(245, 158, 11, 0.1);
-  border-color: var(--accent-color);
-  transform: translateY(-2px);
-}
-
-/* Compact step number */
-.step-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background-color: var(--accent-color);
-  color: white;
-  border-radius: 50%;
-  font-weight: 600;
-  font-size: 0.8rem;
-  flex-shrink: 0;
-}
-
-.step-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-/* More compact links */
-.step-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.step-links a {
-  display: inline-block;
-  font-size: 0.8rem;
-  color: var(--accent-color);
-  text-decoration: none;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background-color: rgba(245, 158, 11, 0.1);
-  white-space: nowrap;
-}
-
-/* Remove unneeded styles */
-.step-link-wrapper,
-.step-link-desc,
-.step-desc {
-  display: none;
-}
-
 /* Mobile Responsiveness */
-@media (max-width: 992px) {
-  .cards-container {
-    justify-content: center;
-  }
-
-  .card {
-    max-width: 320px;
-  }
-}
-
 @media (max-width: 768px) {
   .container {
     padding: 1.5rem 1rem;
@@ -318,24 +185,10 @@ h1 {
     font-size: 1rem;
   }
   
-  .cards-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  
   .card {
     max-width: 100%;
     height: auto;
     min-height: 0;
-  }
-  
-  .figma-step {
-    padding: 8px;
-  }
-  
-  .step-links {
-    flex-direction: row;
   }
 }
 
@@ -353,19 +206,5 @@ h1 {
     height: 70px;
     line-height: 70px;
     font-size: 2.5rem;
-  }
-  
-  .figma-step {
-    padding: 12px 10px;
-  }
-  
-  .step-links {
-    flex-direction: column;
-    gap: 6px;
-  }
-  
-  .step-links a {
-    width: 100%;
-    text-align: center;
   }
 }
